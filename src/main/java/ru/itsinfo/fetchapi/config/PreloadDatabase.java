@@ -29,13 +29,13 @@ public class PreloadDatabase {
             log.info("Preloading " + roleRepository.save(roleAdmin));
             log.info("Preloading " + roleRepository.save(roleUser));
 
-            log.info("Preloading " + userRepository.save(new User("IVAN", "UMEN", 22, "admin@mail.com",
+            log.info("Preloading " + userRepository.save(new User("admin", "admin", 22, "admin@mail.com",
                     passwordEncoder.encode("admin"),
                     new HashSet<>() {{
                         add(roleAdmin);
                         add(roleUser);
                     }})));
-            log.info("Preloading " + userRepository.save(new User("Stas", "KOSI", 21, "user@mail.com",
+            log.info("Preloading " + userRepository.save(new User("user", "user", 22, "user@mail.com",
                     passwordEncoder.encode("user"),
                     new HashSet<>() {{
                         add(roleUser);

@@ -7,7 +7,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itsinfo.fetchapi.model.Role;
 import ru.itsinfo.fetchapi.model.User;
-import ru.itsinfo.fetchapi.service.AppService;
+import ru.itsinfo.fetchapi.service.RoleService;
+import ru.itsinfo.fetchapi.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,41 +16,43 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ApplicationRestController {
-    private final AppService appService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public ApplicationRestController(AppService appService) {
-        this.appService = appService;
+    public ApplicationRestController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping(value = "/users")
     public ResponseEntity<List<User>> findAll() {
-        return ResponseEntity.ok(appService.findAllUsers());
+        return ResponseEntity.ok(userService.findAllUsers());
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getOne(@PathVariable Long id) {
-        return ResponseEntity.ok(appService.getOneUser(id));
+        return ResponseEntity.ok(userService.getOneUser(id));
     }
 
     @PostMapping("/users")
     public ResponseEntity<User> insert(@Valid @RequestBody User user, BindingResult bindingResult) {
-        return ResponseEntity.ok(appService.insertUser(user, bindingResult));
+        return ResponseEntity.ok(userService.insertUser(user, bindingResult));
     }
 
     @PutMapping("/users")
     public ResponseEntity<User> update(@Valid @RequestBody User user, BindingResult bindingResult) {
-        return ResponseEntity.ok(appService.updateUser(user, bindingResult));
+        return ResponseEntity.ok(userService.updateUser(user, bindingResult));
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        appService.deleteUser(id);
+        userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/roles")
     public ResponseEntity<Iterable<Role>> findAllRoles() {
-        return ResponseEntity.ok(appService.findAllRoles());
+        return ResponseEntity.ok(roleService.findAllRoles());
     }
 }

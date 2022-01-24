@@ -6,23 +6,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.itsinfo.fetchapi.service.AppService;
+import ru.itsinfo.fetchapi.service.RoleService;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class ApplicationController {
 
-    private final AppService appService;
+    private final RoleService roleService;
 
     @Autowired
-    public ApplicationController(AppService appService) {
-        this.appService = appService;
+    public ApplicationController(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     @GetMapping({"", "/"})
     public String main(Model model, HttpSession session, @Nullable Authentication auth) {
-        return appService.getPage(model, session, auth);
+        return roleService.getPage(model, session, auth);
     }
 
     @GetMapping("/access-denied")

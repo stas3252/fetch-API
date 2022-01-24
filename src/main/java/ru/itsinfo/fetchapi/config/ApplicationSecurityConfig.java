@@ -11,14 +11,14 @@ import ru.itsinfo.fetchapi.config.handler.CustomAccessDeniedHandler;
 import ru.itsinfo.fetchapi.config.handler.CustomAuthenticationFailureHandler;
 import ru.itsinfo.fetchapi.config.handler.CustomAuthenticationSuccessHandler;
 import ru.itsinfo.fetchapi.config.handler.CustomUrlLogoutSuccessHandler;
-import ru.itsinfo.fetchapi.service.AppService;
+import ru.itsinfo.fetchapi.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // сервис, с помощью которого тащим пользователя
-    private final AppService appService;
+    private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -35,13 +35,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    public ApplicationSecurityConfig(AppService appService,
+    public ApplicationSecurityConfig(UserService userService,
                                      PasswordEncoder passwordEncoder,
                                      CustomAuthenticationSuccessHandler authenticationSuccessHandler,
                                      CustomAuthenticationFailureHandler authenticationFailureHandler,
                                      CustomUrlLogoutSuccessHandler urlLogoutSuccessHandler,
                                      CustomAccessDeniedHandler accessDeniedHandler) {
-        this.appService = appService;
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
@@ -51,7 +51,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(appService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
 
     @Override

@@ -11,10 +11,14 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+
 @Entity
 @Table(name = "t_users", indexes = {@Index(columnList = "name, last_name ASC")})
-public final class User extends AbstractEntity<Long> implements UserDetails {
-    private static final long serialVersionUID = 2715270014679085151L;
+public final class User implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "name")
     @NotEmpty(message = "Name should not be empty")
@@ -35,8 +39,8 @@ public final class User extends AbstractEntity<Long> implements UserDetails {
     @Positive(message = "Age should not be empty")
     private int age;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "t_users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "t_users_roles")
     private Set<Role> roles = new HashSet<>();
 
     public User() {
@@ -49,6 +53,18 @@ public final class User extends AbstractEntity<Long> implements UserDetails {
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public boolean isNew() {
+        return null == getId();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -104,7 +120,7 @@ public final class User extends AbstractEntity<Long> implements UserDetails {
     }
 
     public boolean hasRole(int roleId) {
-        if (null == roles || 0 == roles.size()) {
+        if (roles == null || roles.size() == 0) {
             return false;
         }
         Optional<Role> findRole = roles.stream().filter(role -> roleId == role.getId()).findFirst();
