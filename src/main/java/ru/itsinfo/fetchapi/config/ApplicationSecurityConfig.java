@@ -51,7 +51,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        System.out.println("Зашли*********************************************************");
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+        System.out.println("Вышли*********************************************************");
     }
 
     @Override

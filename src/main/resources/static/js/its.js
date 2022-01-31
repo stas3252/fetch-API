@@ -45,8 +45,14 @@ function loadAddForm() {
 
 function getAllUsers() {
     fetch('/api/users').then(function (response) {
+        console.log("hi");
+        // console.log(response.json());
+        // console.log(response.text());
         if (response.ok) {
+            // console.log(response.json());
+            // console.log("ok");
             response.json().then(users => {
+                console.log("test");
                 usersTableId.empty();
                 users.forEach(user => {
                     _appendUserRow(user);
@@ -109,6 +115,7 @@ function updateUser(id) {
         'password': userFormId.find('#password').val(),
         'roles': userFormId.find('#roles').val().map(roleId => parseInt(roleId))
     };
+    console.log(JSON.stringify(user["roles"]));
     let request = new Request('/api/users/', {
         method: 'PUT',
         headers: headers,

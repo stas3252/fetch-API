@@ -1,6 +1,7 @@
 package ru.itsinfo.fetchapi.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,7 +16,6 @@ import java.util.*;
 @Entity
 @Table(name = "t_users", indexes = {@Index(columnList = "name, last_name ASC")})
 public final class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,16 +37,19 @@ public final class User implements UserDetails {
     private String password;
 
     @Positive(message = "Age should not be empty")
-    private int age;
+    private Integer age;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "t_users_roles")
-    private Set<Role> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "t_users_roles"/*,
+        joinColumns = { @JoinColumn(name = "users_id") },
+        inverseJoinColumns = { @JoinColumn(name = "roles_id") }*/
+    )
+    private Set<Role> roles = new HashSet<Role>();
 
     public User() {
     }
 
-    public User(String firstName, String lastName, int age, String email, String password, Set<Role> roles) {
+    public User(String firstName, String lastName, Integer age, String email, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -103,11 +106,11 @@ public final class User implements UserDetails {
         this.password = password;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

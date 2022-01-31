@@ -9,5 +9,5 @@ import javax.servlet.http.HttpSession;
 
 public interface RoleService {
     Iterable<Role> findAllRoles();
-    String getPage(Model model, HttpSession session, @Nullable Authentication auth);
+    //String getPage(Model model, HttpSession session, @Nullable Authentication auth);
 }

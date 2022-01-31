@@ -29,7 +29,7 @@ public class RoleServiceImpl implements RoleService {
     public Iterable<Role> findAllRoles() {
         return roleRepository.findAll();
     }
-
+/*
     public String getPage(Model model, HttpSession session, @Nullable Authentication auth) {
         if (Objects.isNull(auth)) {
             model.addAttribute("authenticatedName", session.getAttribute("authenticatedName"));
@@ -54,5 +54,5 @@ public class RoleServiceImpl implements RoleService {
 
         return "access-denied-page";
 
-    }
+    }*/
 }

@@ -11,6 +11,7 @@ import ru.itsinfo.fetchapi.service.RoleService;
 import ru.itsinfo.fetchapi.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,6 +28,10 @@ public class ApplicationRestController {
 
     @GetMapping(value = "/users")
     public ResponseEntity<List<User>> findAll() {
+        System.out.println("Зашли, чтоб получить пользователей");
+        for (User us : userService.findAllUsers()) {
+            System.out.println(us);
+        }
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
@@ -42,6 +47,7 @@ public class ApplicationRestController {
 
     @PutMapping("/users")
     public ResponseEntity<User> update(@Valid @RequestBody User user, BindingResult bindingResult) {
+        System.out.println("Пытаемся обновить данные");
         return ResponseEntity.ok(userService.updateUser(user, bindingResult));
     }
 

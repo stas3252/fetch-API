@@ -3,10 +3,13 @@ package ru.itsinfo.fetchapi.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.Nullable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -17,8 +20,10 @@ import ru.itsinfo.fetchapi.model.User;
 import ru.itsinfo.fetchapi.repository.UserRepository;
 import ru.itsinfo.fetchapi.service.UserService;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -116,5 +121,30 @@ public class UserServiceImpl implements UserService {
         }
 
         return newBindingResult;
+    }
+    public String getPage(Model model, HttpSession session, @Nullable Authentication auth) {
+        if (Objects.isNull(auth)) {
+            model.addAttribute("authenticatedName", session.getAttribute("authenticatedName"));
+            session.removeAttribute("authenticatedName");
+
+            model.addAttribute("authenticationException", session.getAttribute("authenticationException"));
+            session.removeAttribute("authenticationException");
+
+            return "login-page";
+        }
+
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
+
+        if (user.hasRole("ROLE_ADMIN")) {
+            return "main-page";
+        }
+
+        if (user.hasRole("ROLE_USER")) {
+            return "user-page";
+        }
+
+        return "access-denied-page";
+
     }
 }

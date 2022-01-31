@@ -1,40 +1,57 @@
 package ru.itsinfo.fetchapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "t_roles")
 public final class Role implements GrantedAuthority {
+    //@JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String name;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private Set<User> users;
 
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    @JoinTable(name = "t_users_roles",
+//            joinColumns = { @JoinColumn(name = "roles_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "users_id") }
+//    )
+//    private Set<User> users = new HashSet<User>();
+
+
     public Role() {
+    }
+
+    public Role(Integer id) {
+        this.setId(id);
     }
 
     public Role(String name) {
         this.name = name;
     }
 
-    public Role(Long id, String name) {
+    public Role(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
